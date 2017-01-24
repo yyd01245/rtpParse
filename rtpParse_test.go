@@ -134,31 +134,56 @@ func TestPcapFile(t *testing.T) {
 				}
 			}
 		} else if rtpHead.typ == PLAYLOAD_AUDIO {
+			var audioSamprate int = 44100
+			var audioChannel int = 2
+			var audioBit int = 16
+			switch audioSamprate {
+			case 16000:
+				ADTS[2] = 0x60
+			case 32000:
+				ADTS[2] = 0x54
+			case 44100:
+				ADTS[2] = 0x50
+			case 48000:
+				ADTS[2] = 0x4C
+			case 96000:
+				ADTS[2] = 0x40
+			default:
+				break
+			}
+			if audioChannel == 2 {
+				ADTS[3] = 0x80
+			} else {
+				ADTS[3] = 0x40
+			}
+			recvLen := packetLen - offset
+			fmt.Println(audioBit, recvLen)
+			/*
+			   ADTS[3] = (audioChannel==2)?0x80:0x40;
 
+			   int len = recvLen - 16 + 7;
+			   len <<= 5;//8bit * 2 - 11 = 5(headerSize 11bit)
+			   len |= 0x1F;//5 bit    1
+			   ADTS[4] = len>>8;
+			   ADTS[5] = len & 0xFF;
+			   *pBufOut = (char*)bufIn+16-7;
+			   memcpy(*pBufOut, ADTS, sizeof(ADTS));
+			   *pOutLen = recvLen - 16 + 7;
+
+			   unsigned char* bufTmp = (unsigned char*)bufIn;
+			   bool bFinishFrame = false;
+			   if (bufTmp[1] & 0x80)
+			   {
+			       //DebugTrace::D("Marker");
+			       bFinishFrame = true;
+			   }
+			   else
+			   {
+			       bFinishFrame = false;
+			   }
+			*/
 		}
 
-		// if udp := packet.Layer(layers.LayerTypeUDP); udp != nil {
-
-		// }
 	}
-	// buf := make([]byte, 20)
-	// n, err := fi.Read(buf)
-	// if err != nil && err != io.EOF {
-	// 	FailWithError(t, "read file", err)
-	// 	panic(err)
-	// }
-	// data := make([]byte, n)
-	// copy(data, buf)
-	// header, _ := getRtpHead(data)
-	// fmt.Println(header)
-	// naluHead, _ := getNALUHead(data[12:])
-	// fmt.Println(naluHead)
-	// if naluHead.TYPE == 24 {
-	// 	stapHead, _ := getStapAHead(data[13:])
-	// 	fmt.Println(stapHead)
-	// } else if naluHead.TYPE == 28 {
-	// 	fuaHead, _ := getFUAHead(data[13:])
-	// 	fmt.Println(fuaHead)
-	// }
 
 }

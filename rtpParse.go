@@ -18,6 +18,8 @@ const (
 
 var h264StartCode = []uint8{0x0, 0x0, 0x0, 0x01, 0x0}
 
+var ADTS = []uint8{0xFF, 0xF1, 0x00, 0x00, 0x00, 0x00, 0xFC}
+
 // interface for protocol
 type StreamProtocol interface {
 	getProtocolHead() interface{}
