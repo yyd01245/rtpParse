@@ -90,17 +90,17 @@ func TestPcapFile(t *testing.T) {
 		fmt.Println("packet len : ", packetLen)
 		upyHead, _ := GetPrivateAHead(data[offset:])
 		fmt.Println("private head: ", *upyHead)
-		offset += int(upyHead.headerLen)
+		offset += int(upyHead.HeaderLen)
 		rtpHead, _ := GetRtpHead(data[offset:])
 		fmt.Println("rtp head: ", *rtpHead)
-		offset += int(rtpHead.headerLen)
-		if rtpHead.typ == PLAYLOAD_VIDEO {
+		offset += int(rtpHead.HeaderLen)
+		if rtpHead.Typ == PLAYLOAD_VIDEO {
 			naluHead, _ := GetNALUHead(data[offset:])
 			fmt.Println("nalu head: ", *naluHead)
-			offset += int(naluHead.headerLen)
+			offset += int(naluHead.HeaderLen)
 			if naluHead.TYPE == PLAYLOAD_FU_A {
 				fragunitHead, _ := GetFUAHead(data[offset:])
-				offset += int(fragunitHead.headerLen)
+				offset += int(fragunitHead.HeaderLen)
 				fmt.Println("fu-a head: ", *fragunitHead)
 				if fragunitHead.S == 1 {
 					// started
@@ -122,18 +122,18 @@ func TestPcapFile(t *testing.T) {
 				for ; lastLen > 2; lastLen = packetLen - offset {
 					stapHead, _ := GetStapAHead(data[offset:])
 					fmt.Println("stap-a head: ", *stapHead)
-					offset += int(stapHead.headerLen)
-					fmt.Println("stap-a nalsize ", stapHead.naluSize)
+					offset += int(stapHead.HeaderLen)
+					fmt.Println("stap-a nalsize ", stapHead.NaluSize)
 					out.Write(h264StartCode[:4])
 					//	end :=
-					out.Write(data[offset : offset+int(stapHead.naluSize)])
+					out.Write(data[offset : offset+int(stapHead.NaluSize)])
 					out.Sync()
-					fmt.Println("write stap-a len ", stapHead.naluSize)
-					offset += int(stapHead.naluSize)
+					fmt.Println("write stap-a len ", stapHead.NaluSize)
+					offset += int(stapHead.NaluSize)
 
 				}
 			}
-		} else if rtpHead.typ == PLAYLOAD_AUDIO {
+		} else if rtpHead.Typ == PLAYLOAD_AUDIO {
 			var audioSamprate int = 44100
 			var audioChannel int = 2
 			var audioBit int = 16
