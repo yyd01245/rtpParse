@@ -38,15 +38,15 @@ func TestGetRtpHead(t *testing.T) {
 	}
 	data := make([]byte, n)
 	copy(data, buf)
-	header, _ := getRtpHead(data)
+	header, _ := GetRtpHead(data)
 	fmt.Println(header)
-	naluHead, _ := getNALUHead(data[12:])
+	naluHead, _ := GetNALUHead(data[12:])
 	fmt.Println(naluHead)
 	if naluHead.TYPE == 24 {
-		stapHead, _ := getStapAHead(data[13:])
+		stapHead, _ := GetStapAHead(data[13:])
 		fmt.Println(stapHead)
 	} else if naluHead.TYPE == 28 {
-		fuaHead, _ := getFUAHead(data[13:])
+		fuaHead, _ := GetFUAHead(data[13:])
 		fmt.Println(fuaHead)
 	}
 
@@ -88,18 +88,18 @@ func TestPcapFile(t *testing.T) {
 		var offset int = 2
 		var packetLen = len(data) - offset
 		fmt.Println("packet len : ", packetLen)
-		upyHead, _ := getPrivateAHead(data[offset:])
+		upyHead, _ := GetPrivateAHead(data[offset:])
 		fmt.Println("private head: ", *upyHead)
 		offset += int(upyHead.headerLen)
-		rtpHead, _ := getRtpHead(data[offset:])
+		rtpHead, _ := GetRtpHead(data[offset:])
 		fmt.Println("rtp head: ", *rtpHead)
 		offset += int(rtpHead.headerLen)
 		if rtpHead.typ == PLAYLOAD_VIDEO {
-			naluHead, _ := getNALUHead(data[offset:])
+			naluHead, _ := GetNALUHead(data[offset:])
 			fmt.Println("nalu head: ", *naluHead)
 			offset += int(naluHead.headerLen)
 			if naluHead.TYPE == PLAYLOAD_FU_A {
-				fragunitHead, _ := getFUAHead(data[offset:])
+				fragunitHead, _ := GetFUAHead(data[offset:])
 				offset += int(fragunitHead.headerLen)
 				fmt.Println("fu-a head: ", *fragunitHead)
 				if fragunitHead.S == 1 {
@@ -120,7 +120,7 @@ func TestPcapFile(t *testing.T) {
 			} else if naluHead.TYPE == PLAYLOAD_STAP_A {
 				lastLen := packetLen - offset
 				for ; lastLen > 2; lastLen = packetLen - offset {
-					stapHead, _ := getStapAHead(data[offset:])
+					stapHead, _ := GetStapAHead(data[offset:])
 					fmt.Println("stap-a head: ", *stapHead)
 					offset += int(stapHead.headerLen)
 					fmt.Println("stap-a nalsize ", stapHead.naluSize)

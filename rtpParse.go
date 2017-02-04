@@ -49,13 +49,13 @@ type Rtp struct {
 	value  []byte
 }
 
-func (r *Rtp) getProtocolHead() (any interface{}) {
+func (r *Rtp) GetProtocolHead() (any interface{}) {
 	return r.header
 }
-func (r *Rtp) getPacketLen() int {
+func (r *Rtp) GetPacketLen() int {
 	return r.len
 }
-func (r *Rtp) getValue() []byte {
+func (r *Rtp) GetValue() []byte {
 	return r.value
 }
 func New(h *RtpHead, l int, data []byte) (r *Rtp) {
@@ -68,7 +68,7 @@ func New(h *RtpHead, l int, data []byte) (r *Rtp) {
 }
 
 // data big_endian
-func getRtpHead(data []byte) (h *RtpHead, err error) {
+func GetRtpHead(data []byte) (h *RtpHead, err error) {
 	if len(data) < 12 {
 		// len error
 		h = nil
@@ -118,17 +118,17 @@ type NaluBody struct {
 	value      []uint8
 }
 
-func (r *NaluBody) getProtocolHead() (any interface{}) {
+func (r *NaluBody) GetProtocolHead() (any interface{}) {
 	return r.header
 }
-func (r *NaluBody) getPacketLen() int {
+func (r *NaluBody) GetPacketLen() int {
 	return r.len
 }
-func (r *NaluBody) getValue() []uint8 {
+func (r *NaluBody) GetValue() []uint8 {
 	return r.value
 }
 
-func getNALUHead(data []uint8) (h *NaluHead, err error) {
+func GetNALUHead(data []uint8) (h *NaluHead, err error) {
 	if len(data) < 2 {
 		// len error
 		h = nil
@@ -145,7 +145,7 @@ func getNALUHead(data []uint8) (h *NaluHead, err error) {
 	return
 }
 
-func getFUAHead(data []uint8) (h *FragUnitHead, err error) {
+func GetFUAHead(data []uint8) (h *FragUnitHead, err error) {
 	if len(data) < 2 {
 		// len error
 		h = nil
@@ -162,7 +162,7 @@ func getFUAHead(data []uint8) (h *FragUnitHead, err error) {
 	return
 }
 
-func getStapAHead(data []uint8) (h *StapUnitHead, err error) {
+func GetStapAHead(data []uint8) (h *StapUnitHead, err error) {
 	if len(data) < 2 {
 		// len error
 		h = nil
@@ -188,7 +188,7 @@ type upyPrivate struct {
 	headerLen uint16
 }
 
-func getPrivateAHead(data []uint8) (h *upyPrivate, err error) {
+func GetPrivateAHead(data []uint8) (h *upyPrivate, err error) {
 	if len(data) < 12 {
 		// len error
 		h = nil
